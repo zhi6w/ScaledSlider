@@ -19,5 +19,4 @@
   slider.valueDidChangeHandler.delegate(on: self) { (self, scaleIndex) in
     print(">>>>>>", scaleIndex)
   }
-
 ```
