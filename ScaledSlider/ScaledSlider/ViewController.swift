@@ -25,10 +25,10 @@ extension ViewController {
     private func setupInterface() {
         
         slider.tintColor = .purple
-        slider.scales = [10, 20, 30, 40, 50, 60]
+        slider.scales = [10, 20, 30, 40, 50 , 60]
         slider.minimumValueImage = UIImage(systemName: "textformat.size.smaller")
         slider.maximumValueImage =  UIImage(systemName: "textformat.size.larger")
-        slider.startValue = 0
+        slider.value = 20
         slider.trackColor = .orange
         
         slider.valueDidChangeHandler.delegate(on: self) { (self, scaleIndex) in

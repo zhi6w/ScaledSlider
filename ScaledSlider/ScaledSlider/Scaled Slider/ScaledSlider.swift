@@ -21,18 +21,27 @@ open class ScaledSlider: UIView {
         }
     }
     
-    /// 刻度合集。
+    /// 刻度值合集。
     open var scales: [Float] = [] {
         didSet {
             loadScales()
+            setNeedsDisplay()
         }
     }
     
-    /// 起始刻度。
-    open var startValue: Float = 0 {
-        didSet {
-            let index = scales.firstIndex(of: startValue) ?? 0
+    /// 滑动条的当前值。
+    open var value: Float {
+        get {
+            let index = lroundf(slider.value * Float(numberOfScales - 1))
+            
+            return scales[index]
+        }
+        
+        set {
+            let index = scales.firstIndex(of: newValue) ?? 0
             slider.value = _scales[index]
+
+            setNeedsDisplay()
         }
     }
     
@@ -48,13 +57,25 @@ open class ScaledSlider: UIView {
     }
     
     /// 滑轨颜色。
-    open var trackColor = UIColor.systemGray
+    open var trackColor = UIColor.systemGray {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
     
     /// 刻度高度。
-    open var scaleHeight: CGFloat = 6
+    open var scaleHeight: CGFloat = 6 {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
     
     /// 滑轨粗细。
-    open var trackLineWidth: CGFloat = 3
+    open var trackLineWidth: CGFloat = 3 {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
     
     open var minimumValueImage: UIImage? {
         didSet {
@@ -69,11 +90,15 @@ open class ScaledSlider: UIView {
     }
     
     
-    private var _scales: [Float] = []
+    private var _scales: [Float] = [] {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
     
     private var previousIndex: Int = -1
     
-    public let valueDidChangeHandler = Delegate<Int, Void>()
+    public let valueDidChangeHandler = Delegate<(index: Int, currentValue: Any), Void>()
     
     
     public override init(frame: CGRect) {
@@ -165,9 +190,7 @@ extension ScaledSlider {
         
         let scalePoint = slider.maximumValue / Float(scales.count - 1)
         
-        _scales = (0..<scales.count).compactMap { (value) -> Float in
-            return scalePoint * Float(value)
-        }
+        _scales = (0..<scales.count).compactMap({ Float($0) * scalePoint })
     }
     
 }
@@ -220,14 +243,16 @@ extension ScaledSlider {
     private func setSliderIndex(_ index: Int, animated: Bool) {
         
         slider.setValue(_scales[index], animated: animated)
+        
+        guard previousIndex != index else { return }
+        
+        let currentValue = scales[index]
+        
+        valueDidChangeHandler((index, currentValue))
 
-        if previousIndex != index {
-            valueDidChangeHandler(index)
+        HapticFeedback.Impact.light()
 
-            HapticFeedback.Impact.light()
-
-            previousIndex = index
-        }
+        previousIndex = index
     }
     
 }
