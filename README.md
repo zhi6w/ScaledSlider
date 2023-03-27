@@ -13,7 +13,7 @@
   slider.scales = [10, 20, 30, 40, 50, 60]
   slider.minimumValueImage = UIImage(systemName: "textformat.size.smaller")
   slider.maximumValueImage =  UIImage(systemName: "textformat.size.larger")
-  slider.startValue = 10
+  slider.value = 10
   slider.trackColor = .orange
         
   slider.valueDidChangeHandler.delegate(on: self) { (self, scaleIndex) in
