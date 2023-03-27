@@ -89,7 +89,7 @@ open class ScaledSlider: UIView {
         }
     }
     
-    
+    /// 格式化后的刻度合集。
     private var _scales: [Float] = [] {
         didSet {
             setNeedsDisplay()
@@ -159,7 +159,7 @@ extension ScaledSlider {
     private func setupSlider() {
         slider.minimumTrackTintColor = .clear
         slider.maximumTrackTintColor = .clear
-        
+                
         slider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
         
         addSubview(slider)
@@ -172,8 +172,6 @@ extension ScaledSlider {
             slider.topAnchor.constraint(equalTo: self.topAnchor),
             slider.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
-
-        loadScales()
     }
     
 }
